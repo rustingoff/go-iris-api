@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func MakeAccessLog() *accesslog.AccessLog {
+func RequestAccessLog() *accesslog.AccessLog {
 	ac := accesslog.File("./access.log")
 	ac.AddOutput(os.Stdout)
 
@@ -22,7 +22,7 @@ func MakeAccessLog() *accesslog.AccessLog {
 	ac.RequestBody = true
 	ac.ResponseBody = false
 	ac.KeepMultiLineError = true
-	ac.PanicLog = accesslog.LogStack
+	ac.PanicLog = accesslog.LogCallers
 
 	// Default line format if formatter is missing:
 	// Time|Latency|Code|Method|Path|IP|Path Params Query Fields|Bytes Received|Bytes Sent|Request|Response|
@@ -32,8 +32,8 @@ func MakeAccessLog() *accesslog.AccessLog {
 		Indent:    " ",
 		HumanTime: true,
 	})
-	// ac.SetFormatter(&accesslog.CSV{})
-	// ac.SetFormatter(&accesslog.Template{Text: "{{.Code}}"})
+	//ac.SetFormatter(&accesslog.CSV{})
+	//ac.SetFormatter(&accesslog.Template{Text: "{{.Code}}"})
 
 	return ac
 }

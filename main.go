@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/recover"
+	"github.com/rustingoff/go-iris-api/packages/logger"
 	"net/http"
 	"os"
 	"os/signal"
@@ -10,7 +13,29 @@ import (
 )
 
 func main() {
-	app := IrisRouter().InitRouter()
+	accessLog := logger.RequestAccessLog()
+	defer func() {
+		err := accessLog.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	app := iris.New()
+	app.Use(accessLog.Handler)
+	app.UseRouter(recover.New())
+
+	testController := ServiceContainer().InjectTestController()
+
+	testRoute := app.Party("/test")
+	{
+		testRoute.Get("/", testController.Test)
+	}
+
+	err := app.Build()
+	if err != nil {
+		app.Logger().Fatal(err)
+	}
 	srv := NewHTTPServer(app)
 	app.Logger().Info("Server started on http://localhost:8080")
 	go func() {
@@ -19,7 +44,6 @@ func main() {
 			app.Logger().Fatal(err)
 		}
 	}()
-
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit

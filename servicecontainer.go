@@ -30,9 +30,11 @@ var (
 )
 
 func ServiceContainer() IServiceContainer {
-	containerOnce.Do(func() {
-		k = &kernel{}
-	})
+	if k == nil {
+		containerOnce.Do(func() {
+			k = &kernel{}
+		})
+	}
 
-	return k
+	return &kernel{}
 }

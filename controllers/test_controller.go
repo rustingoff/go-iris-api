@@ -22,5 +22,17 @@ func (controller *testController) Test(ctx iris.Context) {
 		return
 	}
 
-	ctx.StatusCode(iris.StatusOK)
+	options := iris.JSON{
+		Indent: "  ",
+		Secure: true,
+	}
+
+	ctx.StatusCode(iris.StatusCreated)
+	err = ctx.JSON(iris.Map{
+		"message": "ok",
+	}, options)
+	if err != nil {
+		ctx.StopWithError(iris.StatusInternalServerError, err)
+		return
+	}
 }
