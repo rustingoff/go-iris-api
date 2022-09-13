@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func RequestAccessLog() *accesslog.AccessLog {
+func NewRequestLogger() *accesslog.AccessLog {
 	ac := accesslog.File("./access.log")
 	ac.AddOutput(os.Stdout)
 

@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	accessLog := logger.RequestAccessLog()
+	accessLog := logger.NewRequestLogger()
 	defer func() {
 		err := accessLog.Close()
 		if err != nil {
