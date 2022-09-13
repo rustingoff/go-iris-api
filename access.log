@@ -1,0 +1,9 @@
+{
+  "timestamp": "2022-09-13 11:41:53",
+  "latency": 284771,
+  "code": 200,
+  "method": "GET",
+  "path": "/",
+  "ip": "::1",
+  "bytes_sent": 12
+}
